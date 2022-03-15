@@ -1,9 +1,9 @@
-package de._coho04_.ticket.support.listener;
+package de.goldendeveloper.ticket.support.listener;
 
-import de._Coho04_.mysql.entities.Database;
-import de._Coho04_.mysql.entities.Row;
-import de._Coho04_.mysql.entities.Table;
-import de._coho04_.ticket.support.Main;
+import de.goldendeveloper.mysql.entities.Database;
+import de.goldendeveloper.mysql.entities.Row;
+import de.goldendeveloper.mysql.entities.Table;
+import de.goldendeveloper.ticket.support.Main;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
@@ -35,7 +35,7 @@ public class onJoin extends ListenerAdapter {
                         .setColor(Color.RED)
                         .addField("Failed to find Table", "Guild Join Event", false)
                         .build();
-                Main.getBot().getTextChannelById(Main.DcErrorChannel).sendMessageEmbeds(embed).queue();
+                Main.getDiscord().getBot().getTextChannelById(Main.DcErrorChannel).sendMessageEmbeds(embed).queue();
             }
         } else {
             MessageEmbed embed = new EmbedBuilder()
@@ -43,7 +43,7 @@ public class onJoin extends ListenerAdapter {
                     .setColor(Color.RED)
                     .addField("Failed to find Database", "Guild Join Event", false)
                     .build();
-            Main.getBot().getTextChannelById(Main.DcErrorChannel).sendMessageEmbeds(embed).queue();
+            Main.getDiscord().getBot().getTextChannelById(Main.DcErrorChannel).sendMessageEmbeds(embed).queue();
         }
     }
 }
