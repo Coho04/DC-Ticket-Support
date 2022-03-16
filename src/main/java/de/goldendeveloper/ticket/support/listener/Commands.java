@@ -1,6 +1,7 @@
 package de.goldendeveloper.ticket.support.listener;
 
 import de.goldendeveloper.mysql.entities.Column;
+import de.goldendeveloper.mysql.entities.Database;
 import de.goldendeveloper.mysql.entities.Table;
 import de.goldendeveloper.ticket.support.Main;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -11,6 +12,8 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.commands.Command;
 
 import java.awt.*;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 
 public class Commands extends ListenerAdapter {
@@ -23,7 +26,7 @@ public class Commands extends ListenerAdapter {
         if (e.isFromGuild()) {
             String cmd = e.getName();
             if (cmd.equalsIgnoreCase(Main.cmdSupport)) {
-                createSupportTicket(e, e.getUser());
+                e.getInteraction().reply(createSupportTicket(e, e.getUser())).queue();
             } else if (cmd.equalsIgnoreCase(Main.cmdHelp)) {
                 e.getInteraction().replyEmbeds(createHelpMessage()).queue();
             } else if (cmd.equalsIgnoreCase(Main.cmdSettings)) {
@@ -51,29 +54,51 @@ public class Commands extends ListenerAdapter {
     }
 
     private static String createSupportTicket(SlashCommandInteractionEvent e, User user) {
-        EmbedBuilder embed = new EmbedBuilder();
-        embed.setTitle("**Support**");
-        embed.setColor(Color.GREEN);
-        embed.addField("Ticket Support | " + user.getName(),"Grund: " + e.getOption(Main.cmdSupportOption).getAsString(), true);
+        Main.getMysql().connect();
+        if (Main.getMysql().existsDatabase(Main.dbName)) {
+            Database db = Main.getMysql().getDatabase(Main.dbName);
+            if (db.existsTable(Main.tableName)) {
+                Table table = db.getTable(Main.tableName);
+                if (table.hasColumn(Main.cmnModeratorID)) {
+                    if (table.hasColumn(Main.cmnGuildID)) {
+                        if (table.getColumn(Main.cmnGuildID).getAll().contains(e.getGuild().getId())) {
+                            HashMap<String, Object> row = table.getRow(table.getColumn(Main.cmnGuildID), e.getGuild().getId());
+                            String roleID = row.get(Main.cmnModeratorID).toString();
+                            Role role = e.getJDA().getRoleById(roleID);
+                            if (role != null) {
+                                EmbedBuilder embed = new EmbedBuilder();
+                                embed.setTitle("**Support**");
+                                embed.setColor(Color.GREEN);
+                                embed.setFooter("Golden-Developer", e.getJDA().getSelfUser().getAvatarUrl());
+                                embed.setThumbnail(e.getUser().getAvatarUrl());
+                                embed.setTimestamp(LocalDateTime.now());
+                                embed.addField("Ticket Support | " + user.getName(),"Offene Frage: " + e.getOption(Main.cmdSupportOption).getAsString(), true);
+                                embed.addField("", role.getAsMention(), true);
 
 
-        Main.getDiscord().getBot().getTextChannelById("949715424898056322").sendMessageEmbeds(embed.build()).queue();
-        if (e.getGuild().getThreadChannelsByName("Ticket Support | " + user.getName(), true).isEmpty()) {
-            Main.getDiscord().getBot().getTextChannelById("949715424898056322").createThreadChannel("Ticket Support | " + user.getName()).queue(channel -> {
-                channel.addThreadMember(user).queue();
-                channel.getManager().setLocked(true).queue();
-                channel.sendMessageEmbeds(embed.build()).queue(message -> {
-                    message.addReaction(closeTicketEmoji).queue();
-                    message.addReaction(deleteTicketEmoji).queue();
-                });
-            });
-        } else {
-            ThreadChannel channel = e.getGuild().getThreadChannelsByName("Ticket Support | " + user.getName(), true).get(0);
-            if (channel != null)  {
-                channel.getManager().setArchived(false).queue();
+                                Main.getDiscord().getBot().getTextChannelById("949715424898056322").sendMessageEmbeds(embed.build()).queue();
+                                if (e.getGuild().getThreadChannelsByName("Ticket Support | " + user.getName(), true).isEmpty()) {
+                                    Main.getDiscord().getBot().getTextChannelById("949715424898056322").createThreadChannel("Ticket Support | " + user.getName()).queue(channel -> {
+                                        channel.addThreadMember(user).queue();
+                                        channel.getManager().setLocked(true).queue();
+                                        channel.sendMessageEmbeds(embed.build()).queue(message -> {
+                                            message.addReaction(closeTicketEmoji).queue();
+                                            message.addReaction(deleteTicketEmoji).queue();
+                                        });
+                                    });
+                                } else {
+                                    ThreadChannel channel = e.getGuild().getThreadChannelsByName("Ticket Support | " + user.getName(), true).get(0);
+                                    if (channel != null)  {
+                                        channel.getManager().setArchived(false).queue();
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
-        return "Dein Support ticket wurde erstellt!";
+        return "Dein Support Ticket wurde erstellt!";
     }
 
     private static MessageEmbed createHelpMessage() {
