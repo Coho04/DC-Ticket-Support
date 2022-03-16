@@ -6,6 +6,7 @@ import de.goldendeveloper.ticket.support.Main;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.commands.Command;
 
@@ -14,12 +15,15 @@ import java.util.HashMap;
 
 public class Commands extends ListenerAdapter {
 
+    private static final String closeTicketEmoji = "\uD83D\uDD10";
+    private static final String deleteTicketEmoji = "\uD83D\uDCC2";
+
     @Override
     public void onSlashCommandInteraction(SlashCommandInteractionEvent e) {
         if (e.isFromGuild()) {
             String cmd = e.getName();
             if (cmd.equalsIgnoreCase(Main.cmdSupport)) {
-                createSupportTicket(e.getOption(Main.cmdSupportOption).getAsString(), e.getUser());
+                createSupportTicket(e, e.getUser());
             } else if (cmd.equalsIgnoreCase(Main.cmdHelp)) {
                 e.getInteraction().replyEmbeds(createHelpMessage()).queue();
             } else if (cmd.equalsIgnoreCase(Main.cmdSettings)) {
@@ -30,20 +34,45 @@ public class Commands extends ListenerAdapter {
         }
     }
 
-    private static String createSupportTicket(String question, User user) {
+    @Override
+    public void onMessageReactionAdd(MessageReactionAddEvent e) {
+        if (e.isFromGuild()) {
+            if (e.isFromThread()) {
+                if (!e.getUser().isBot()) {
+                    if (e.getReactionEmote().getEmoji().equalsIgnoreCase(closeTicketEmoji)) {
+                        e.getThreadChannel().getManager().setArchived(true).queue();
+                    }
+                    if (e.getReactionEmote().getEmoji().equalsIgnoreCase(deleteTicketEmoji)) {
+                        e.getThreadChannel().delete().queue();
+                    }
+                }
+            }
+        }
+    }
+
+    private static String createSupportTicket(SlashCommandInteractionEvent e, User user) {
         EmbedBuilder embed = new EmbedBuilder();
         embed.setTitle("**Support**");
         embed.setColor(Color.GREEN);
-        embed.addField("Ticket Support | " + user.getName(),"Grund: " + question, true);
-        Main.getDiscord().getBot().getTextChannelById("949715424898056322").sendMessage(question).queue();
-        Main.getDiscord().getBot().getTextChannelById("949715424898056322").createThreadChannel("Ticket Support | " + user.getName()).queue(channel -> {
+        embed.addField("Ticket Support | " + user.getName(),"Grund: " + e.getOption(Main.cmdSupportOption).getAsString(), true);
+
+
+        Main.getDiscord().getBot().getTextChannelById("949715424898056322").sendMessageEmbeds(embed.build()).queue();
+        if (e.getGuild().getThreadChannelsByName("Ticket Support | " + user.getName(), true).isEmpty()) {
+            Main.getDiscord().getBot().getTextChannelById("949715424898056322").createThreadChannel("Ticket Support | " + user.getName()).queue(channel -> {
                 channel.addThreadMember(user).queue();
                 channel.getManager().setLocked(true).queue();
                 channel.sendMessageEmbeds(embed.build()).queue(message -> {
-                    message.addReaction("Close").queue();
-                    message.addReaction("Delete").queue();
+                    message.addReaction(closeTicketEmoji).queue();
+                    message.addReaction(deleteTicketEmoji).queue();
                 });
-        });
+            });
+        } else {
+            ThreadChannel channel = e.getGuild().getThreadChannelsByName("Ticket Support | " + user.getName(), true).get(0);
+            if (channel != null)  {
+                channel.getManager().setArchived(false).queue();
+            }
+        }
         return "Dein Support ticket wurde erstellt!";
     }
 
