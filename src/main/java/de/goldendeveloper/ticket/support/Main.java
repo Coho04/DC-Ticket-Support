@@ -8,9 +8,8 @@ import de.goldendeveloper.mysql.MYSQL;
 public class Main {
 
     private static MYSQL mysql;
-    private static final String token = "OTQ5NzE0NDkxNDE3OTY4Njcx.YiOYiw.CbaI-GfZSAX84Ub9h8xmezfU13Y";
-
-    public static final String DcErrorChannel = "854740410189742150";
+    private static final String token = ID.DiscordBotToken;
+    public static final String DcErrorChannel = ID.DiscordBotErrorChannel;
 
     public static final String cmdSupport = "support";
     public static final String cmdSupportOption = "frage";
@@ -32,7 +31,7 @@ public class Main {
 
     public static void main(String[] args) {
         discord = new Discord(token);
-        Main.MysqlFirstStart("138.201.202.3", "DC-Ticket-Support", "2tEW7yRe8!t2[S90", 3306);
+        Main.MysqlFirstStart(ID.MysqlHostname, ID.MysqlUsername, ID.MysqlPassword, ID.MysqlPort);
     }
 
     public static void MysqlFirstStart(String hostname, String username, String password, int port) {
