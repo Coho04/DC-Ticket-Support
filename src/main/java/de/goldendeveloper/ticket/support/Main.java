@@ -15,8 +15,10 @@ public class Main {
     public static String cmdSupport = "support";
     public static String cmdSupportOption = "frage";
     public static String cmdSettings = "settings";
-    public static String cmdSettingsActionOption = "action";
-    public static String cmdSettingsValueOption = "value";
+    public static String cmdSettingsSubSupport = "support";
+    public static String cmdSettingsSubSupportOptionChannel = "channel";
+    public static String cmdSettingsSubModerator = "moderator";
+    public static String cmdSettingsSubModeratorOptionRole = "role";
     public static String cmdHelp = "help";
 
     public static String dbName = "TicketSupport";
@@ -30,7 +32,7 @@ public class Main {
 
     public static void main(String[] args) {
         discord = new Discord(token);
-        Main.MysqlFirstStart("", "", "", 3306);
+        Main.MysqlFirstStart("138.201.202.3", "DC-Ticket-Support", "2tEW7yRe8!t2[S90", 3306);
     }
 
     public static void MysqlFirstStart(String hostname, String username, String password, int port) {

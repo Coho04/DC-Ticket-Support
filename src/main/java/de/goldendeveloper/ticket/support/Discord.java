@@ -1,6 +1,7 @@
 package de.goldendeveloper.ticket.support;
 
 import de.goldendeveloper.ticket.support.listener.Commands;
+import de.goldendeveloper.ticket.support.listener.onJoin;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
@@ -29,16 +30,15 @@ public class Discord {
                             GatewayIntent.GUILD_WEBHOOKS, GatewayIntent.GUILD_MEMBERS,
                             GatewayIntent.GUILD_MESSAGE_TYPING)
                     .addEventListeners(
-                            new Commands()
+                            new Commands(),
+                            new onJoin()
                     )
                     .setAutoReconnect(true)
                     .build().awaitReady();
             bot.upsertCommand(Main.cmdSettings, "Stellt den Discord Ticket-Support Bot ein!").addSubcommands(
-                            new SubcommandData("", ""),
-                            new SubcommandData("", "")
+                            new SubcommandData(Main.cmdSettingsSubSupport, "Support").addOption(OptionType.CHANNEL, Main.cmdSettingsSubSupportOptionChannel, "Der Support Channel", true),
+                            new SubcommandData(Main.cmdSettingsSubModerator, "Moderator").addOption(OptionType.ROLE, Main.cmdSettingsSubModeratorOptionRole, "Die Moderatoren Rolle!", true)
                     )
-                    .addOption(OptionType.STRING, Main.cmdSettingsActionOption, "Wähle deine Action!", true)
-                    .addOption(OptionType.STRING, Main.cmdSettingsValueOption, "Den Wert den du Festlegen möchtest!", true)
                     .queue();
             bot.upsertCommand(Main.cmdSupport, "Erstellt ein Support Ticket für dich!").addOption(OptionType.STRING, Main.cmdSupportOption, "Stell deine Frage", true).queue();
             bot.upsertCommand(Main.cmdHelp, "Zeigt dir eine Liste aller möglichen Befehle an!").queue();
