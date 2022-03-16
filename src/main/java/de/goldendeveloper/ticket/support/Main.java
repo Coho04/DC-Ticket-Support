@@ -12,21 +12,21 @@ public class Main {
 
     public static final String DcErrorChannel = "854740410189742150";
 
-    public static String cmdSupport = "support";
-    public static String cmdSupportOption = "frage";
-    public static String cmdSettings = "settings";
-    public static String cmdSettingsSubSupport = "support";
-    public static String cmdSettingsSubSupportOptionChannel = "channel";
-    public static String cmdSettingsSubModerator = "moderator";
-    public static String cmdSettingsSubModeratorOptionRole = "role";
-    public static String cmdHelp = "help";
+    public static final String cmdSupport = "support";
+    public static final String cmdSupportOption = "frage";
+    public static final String cmdSettings = "settings";
+    public static final String cmdSettingsSubSupport = "support";
+    public static final String cmdSettingsSubSupportOptionChannel = "channel";
+    public static final String cmdSettingsSubModerator = "moderator";
+    public static final String cmdSettingsSubModeratorOptionRole = "role";
+    public static final String cmdHelp = "help";
 
-    public static String dbName = "TicketSupport";
-    public static String tableName = "Support";
-    public static String cmnSupportChannelID = "SupportChannelID";
-    public static String cmnModeratorID = "ModeratorID";
-    public static String cmnGuildID = "GuildID";
-    public static String cmnOwnerID = "OwnerID";
+    public static final String dbName = "TicketSupport";
+    public static final String tableName = "Support";
+    public static final String cmnSupportChannelID = "SupportChannelID";
+    public static final String cmnModeratorID = "ModeratorID";
+    public static final String cmnGuildID = "GuildID";
+    public static final String cmnOwnerID = "OwnerID";
 
     private static Discord discord;
 
