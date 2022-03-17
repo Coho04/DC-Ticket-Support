@@ -12,7 +12,6 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.commands.Command;
 
 import java.awt.*;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 
@@ -54,7 +53,6 @@ public class Commands extends ListenerAdapter {
     }
 
     private static String createSupportTicket(SlashCommandInteractionEvent e, User user) {
-        Main.getMysql().connect();
         if (Main.getMysql().existsDatabase(Main.dbName)) {
             Database db = Main.getMysql().getDatabase(Main.dbName);
             if (db.existsTable(Main.tableName)) {
@@ -75,21 +73,23 @@ public class Commands extends ListenerAdapter {
                                 embed.addField("Ticket Support | " + user.getName(),"Offene Frage: " + e.getOption(Main.cmdSupportOption).getAsString(), true);
                                 embed.addField("", role.getAsMention(), true);
 
-
-                                Main.getDiscord().getBot().getTextChannelById("949715424898056322").sendMessageEmbeds(embed.build()).queue();
-                                if (e.getGuild().getThreadChannelsByName("Ticket Support | " + user.getName(), true).isEmpty()) {
-                                    Main.getDiscord().getBot().getTextChannelById("949715424898056322").createThreadChannel("Ticket Support | " + user.getName()).queue(channel -> {
-                                        channel.addThreadMember(user).queue();
-                                        channel.getManager().setLocked(true).queue();
-                                        channel.sendMessageEmbeds(embed.build()).queue(message -> {
-                                            message.addReaction(closeTicketEmoji).queue();
-                                            message.addReaction(deleteTicketEmoji).queue();
+                                TextChannel SupportChannel = e.getJDA().getTextChannelById(row.get(Main.cmnSupportChannelID).toString());
+                                if (SupportChannel != null) {
+                                    SupportChannel.sendMessageEmbeds(embed.build()).queue();
+                                    if (e.getGuild().getThreadChannelsByName("Ticket Support | " + user.getName(), true).isEmpty()) {
+                                        SupportChannel.createThreadChannel("Ticket Support | " + user.getName()).queue(channel -> {
+                                            channel.addThreadMember(user).queue();
+                                            channel.getManager().setLocked(true).queue();
+                                            channel.sendMessageEmbeds(embed.build()).queue(message -> {
+                                                message.addReaction(closeTicketEmoji).queue();
+                                                message.addReaction(deleteTicketEmoji).queue();
+                                            });
                                         });
-                                    });
-                                } else {
-                                    ThreadChannel channel = e.getGuild().getThreadChannelsByName("Ticket Support | " + user.getName(), true).get(0);
-                                    if (channel != null)  {
-                                        channel.getManager().setArchived(false).queue();
+                                    } else {
+                                        ThreadChannel channelSupport = e.getGuild().getThreadChannelsByName("Ticket Support | " + user.getName(), true).get(0);
+                                        if (channelSupport != null) {
+                                            channelSupport.getManager().setArchived(false).queue();
+                                        }
                                     }
                                 }
                             }
@@ -110,7 +110,6 @@ public class Commands extends ListenerAdapter {
     }
 
     private static void cmdSettings(SlashCommandInteractionEvent e) {
-        Main.getMysql().connect();
         if (Main.getMysql().existsDatabase(Main.dbName)) {
             if (Main.getMysql().getDatabase(Main.dbName).existsTable(Main.tableName)) {
                 Table table = Main.getMysql().getDatabase(Main.dbName).getTable(Main.tableName);
@@ -151,6 +150,5 @@ public class Commands extends ListenerAdapter {
         } else {
             Main.getDiscord().getBot().getTextChannelById(Main.DcErrorChannel).sendMessageEmbeds(Main.getDiscord().getErrorEmbed("Database", "Commands")).queue();
         }
-        Main.getMysql().disconnect();
     }
 }

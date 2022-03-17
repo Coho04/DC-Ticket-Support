@@ -36,7 +36,6 @@ public class Main {
 
     public static void MysqlFirstStart(String hostname, String username, String password, int port) {
         mysql = new MYSQL(hostname, username, password, port);
-        mysql.connect();
         if (!mysql.existsDatabase(dbName)) {
             mysql.createDatabase(dbName);
         }
@@ -57,7 +56,6 @@ public class Main {
         if (!table.existsColumn(cmnOwnerID)) {
             table.addColumn(cmnOwnerID, MysqlTypes.VARCHAR, 50);
         }
-        mysql.disconnect();
     }
 
     public static MYSQL getMysql() {

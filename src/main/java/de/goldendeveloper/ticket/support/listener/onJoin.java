@@ -13,7 +13,6 @@ public class onJoin extends ListenerAdapter {
 
     @Override
     public void onGuildJoin(GuildJoinEvent e) {
-        Main.getMysql().connect();
         if (Main.getMysql().existsDatabase(Main.dbName)) {
             Database db = Main.getMysql().getDatabase(Main.dbName);
             if (db.existsTable(Main.tableName)) {
