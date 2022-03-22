@@ -8,7 +8,7 @@
     <artifactId>DC-Ticket-Support</artifactId>
     <version>1.0</version>
 
-    <name>GD-Entertainment</name>
+    <name>GD-Ticket-Support</name>
     <build>
         <resources>
             <resource>
