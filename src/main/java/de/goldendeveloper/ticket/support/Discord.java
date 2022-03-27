@@ -1,7 +1,7 @@
 package de.goldendeveloper.ticket.support;
 
 import de.goldendeveloper.ticket.support.listener.Commands;
-import de.goldendeveloper.ticket.support.listener.onJoin;
+import de.goldendeveloper.ticket.support.listener.OnJoin;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -35,7 +35,7 @@ public class Discord {
                             GatewayIntent.GUILD_MESSAGE_TYPING)
                     .addEventListeners(
                             new Commands(),
-                            new onJoin()
+                            new OnJoin()
                     )
                     .setAutoReconnect(true)
                     .build().awaitReady();

@@ -56,6 +56,7 @@ public class Main {
         if (!table.existsColumn(cmnOwnerID)) {
             table.addColumn(cmnOwnerID, MysqlTypes.VARCHAR, 50);
         }
+        System.out.println("MYSQL Finished");
     }
 
     public static MYSQL getMysql() {

@@ -9,7 +9,7 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 import java.util.List;
 
-public class onJoin extends ListenerAdapter {
+public class OnJoin extends ListenerAdapter {
 
     @Override
     public void onGuildJoin(GuildJoinEvent e) {

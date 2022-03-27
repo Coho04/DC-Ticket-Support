@@ -18,7 +18,6 @@ import java.util.HashMap;
 public class Commands extends ListenerAdapter {
 
     private static final String closeTicketEmoji = "\uD83D\uDD10";
-    private static final String deleteTicketEmoji = "\uD83D\uDCC2";
 
     @Override
     public void onSlashCommandInteraction(SlashCommandInteractionEvent e) {
@@ -41,11 +40,15 @@ public class Commands extends ListenerAdapter {
         if (e.isFromGuild()) {
             if (e.isFromThread()) {
                 if (!e.getUser().isBot()) {
-                    if (e.getReactionEmote().getEmoji().equalsIgnoreCase(closeTicketEmoji)) {
-                        e.getThreadChannel().getManager().setArchived(true).queue();
-                    }
-                    if (e.getReactionEmote().getEmoji().equalsIgnoreCase(deleteTicketEmoji)) {
-                        e.getThreadChannel().delete().queue();
+                    Emote emote = e.getJDA().getEmoteById("957226297556336670");
+                    if (e.getReactionEmote().isEmote()) {
+                        if (e.getReactionEmote().getEmote().getImageUrl().equals(emote.getImageUrl())) {
+                            e.getThreadChannel().delete().queue();
+                        }
+                    } else if (e.getReactionEmote().isEmoji()) {
+                        if (e.getReactionEmote().getEmoji().equalsIgnoreCase(closeTicketEmoji)) {
+                            e.getThreadChannel().getManager().setArchived(true).queue();
+                        }
                     }
                 }
             }
@@ -63,14 +66,17 @@ public class Commands extends ListenerAdapter {
                             HashMap<String, Object> row = table.getRow(table.getColumn(Main.cmnGuildID), e.getGuild().getId());
                             String roleID = row.get(Main.cmnModeratorID).toString();
                             Role role = e.getJDA().getRoleById(roleID);
-                            if (role != null) {
+                            Emote emote = e.getJDA().getEmoteById("957226297556336670");
+                            if (role != null && emote != null) {
                                 EmbedBuilder embed = new EmbedBuilder();
                                 embed.setTitle("**Support**");
                                 embed.setColor(Color.GREEN);
                                 embed.setFooter("Golden-Developer", e.getJDA().getSelfUser().getAvatarUrl());
                                 embed.setThumbnail(e.getUser().getAvatarUrl());
                                 embed.setTimestamp(LocalDateTime.now());
-                                embed.addField("Ticket Support | " + user.getName(),"Offene Frage: " + e.getOption(Main.cmdSupportOption).getAsString(), true);
+                                embed.addField("Ticket Support | " + user.getName(), "Offene Frage: " + e.getOption(Main.cmdSupportOption).getAsString(), true);
+                                embed.addField("", emote.getAsMention() + " Zum löschen des Tickets", false);
+                                embed.addField("", ":closed_lock_with_key:  Zum Archivieren des Tickets", false);
                                 embed.addField("", role.getAsMention(), true);
 
                                 TextChannel SupportChannel = e.getJDA().getTextChannelById(row.get(Main.cmnSupportChannelID).toString());
@@ -82,7 +88,7 @@ public class Commands extends ListenerAdapter {
                                             channel.getManager().setLocked(true).queue();
                                             channel.sendMessageEmbeds(embed.build()).queue(message -> {
                                                 message.addReaction(closeTicketEmoji).queue();
-                                                message.addReaction(deleteTicketEmoji).queue();
+                                                message.addReaction(emote).queue();
                                             });
                                         });
                                     } else {
