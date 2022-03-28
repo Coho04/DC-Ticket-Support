@@ -1,5 +1,8 @@
 package de.goldendeveloper.ticket.support;
 
+import club.minnced.discord.webhook.WebhookClientBuilder;
+import club.minnced.discord.webhook.send.WebhookEmbed;
+import club.minnced.discord.webhook.send.WebhookEmbedBuilder;
 import de.goldendeveloper.ticket.support.listener.Commands;
 import de.goldendeveloper.ticket.support.listener.OnJoin;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -45,20 +48,31 @@ public class Discord {
                     ).queue();
             bot.upsertCommand(Main.cmdSupport, "Erstellt ein Support Ticket für dich!").addOption(OptionType.STRING, Main.cmdSupportOption, "Stell deine Frage", true).queue();
             bot.upsertCommand(Main.cmdHelp, "Zeigt dir eine Liste aller möglichen Befehle an!").queue();
+            Online();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public MessageEmbed getErrorEmbed(String ERROR, String onClass) {
-        return new EmbedBuilder()
-                .setTitle("**ERROR**")
-                .setColor(Color.RED)
-                .addField("Failed to find " + ERROR, "On " + onClass, false)
-                .build();
+    public void sendErrorMessage(String Error) {
+        WebhookEmbedBuilder embed = new WebhookEmbedBuilder();
+        embed.setAuthor(new WebhookEmbed.EmbedAuthor(getBot().getSelfUser().getName(), getBot().getSelfUser().getAvatarUrl(), "https://Golden-Developer.de"));
+        embed.addField(new WebhookEmbed.EmbedField(false, "[ERROR]", Error));
+        embed.setColor(0xFF0000);
+        embed.setFooter(new WebhookEmbed.EmbedFooter("@Golden-Developer", getBot().getSelfUser().getAvatarUrl()));
+        new WebhookClientBuilder(Main.getConfig().getDiscordWebhook()).build().send(embed.build());
     }
 
     public JDA getBot() {
         return bot;
+    }
+
+    private void Online() {
+        WebhookEmbedBuilder embed = new WebhookEmbedBuilder();
+        embed.setAuthor(new WebhookEmbed.EmbedAuthor(getBot().getSelfUser().getName(), getBot().getSelfUser().getAvatarUrl(), "https://Golden-Developer.de"));
+        embed.addField(new WebhookEmbed.EmbedField(false, "[Status]", "ONLINE"));
+        embed.setColor(0x00FF00);
+        embed.setFooter(new WebhookEmbed.EmbedFooter("@Golden-Developer", getBot().getSelfUser().getAvatarUrl()));
+        new WebhookClientBuilder(Main.getConfig().getDiscordWebhook()).build().send(embed.build());
     }
 }

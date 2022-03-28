@@ -22,10 +22,10 @@ public class OnJoin extends ListenerAdapter {
                     table.insert(new Row(table, table.getDatabase()).with(Main.cmnGuildID, e.getGuild().getId()).with(Main.cmnModeratorID, "null").with(Main.cmnOwnerID, e.getGuild().getOwnerId()).with(Main.cmnSupportChannelID, "null"));
                 }
             } else {
-                Main.getDiscord().getBot().getTextChannelById(Main.DcErrorChannel).sendMessageEmbeds(Main.getDiscord().getErrorEmbed("Table", "onJoin")).queue();
+                Main.getDiscord().sendErrorMessage("Failed to find Table in onJoin");
             }
         } else {
-            Main.getDiscord().getBot().getTextChannelById(Main.DcErrorChannel).sendMessageEmbeds(Main.getDiscord().getErrorEmbed("Database", "onJoin")).queue();
+            Main.getDiscord().sendErrorMessage("Failed to find Database in onJoin");
         }
     }
 }

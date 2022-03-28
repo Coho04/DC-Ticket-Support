@@ -7,10 +7,6 @@ import de.goldendeveloper.mysql.MYSQL;
 
 public class Main {
 
-    private static MYSQL mysql;
-    private static final String token = ID.DiscordBotToken;
-    public static final String DcErrorChannel = ID.DiscordBotErrorChannel;
-
     public static final String cmdSupport = "support";
     public static final String cmdSupportOption = "frage";
     public static final String cmdSettings = "settings";
@@ -27,11 +23,14 @@ public class Main {
     public static final String cmnGuildID = "GuildID";
     public static final String cmnOwnerID = "OwnerID";
 
+    private static MYSQL mysql;
     private static Discord discord;
+    private static Config config;
 
     public static void main(String[] args) {
-        discord = new Discord(token);
-        Main.MysqlFirstStart(ID.MysqlHostname, ID.MysqlUsername, ID.MysqlPassword, ID.MysqlPort);
+        config = new Config();
+        discord = new Discord(config.getDiscordToken());
+        Main.MysqlFirstStart(config.getMysqlHostname(), config.getMysqlUsername(), config.getMysqlPassword(), config.getMysqlPort());
     }
 
     public static void MysqlFirstStart(String hostname, String username, String password, int port) {
@@ -65,5 +64,9 @@ public class Main {
 
     public static Discord getDiscord() {
         return discord;
+    }
+
+    public static Config getConfig() {
+        return config;
     }
 }

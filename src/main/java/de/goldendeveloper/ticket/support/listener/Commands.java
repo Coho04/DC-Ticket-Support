@@ -145,16 +145,16 @@ public class Commands extends ListenerAdapter {
                     } else {
                         e.getInteraction().reply("ERROR: Bitte den Discord Bot neu einladen!").queue();
                         e.getGuild().leave().queue();
-                        Main.getDiscord().getBot().getTextChannelById(Main.DcErrorChannel).sendMessageEmbeds(Main.getDiscord().getErrorEmbed("DISCORD GUILD ID", "Command")).queue();
+                        Main.getDiscord().sendErrorMessage("Failed to find DISCORD GUILD ID in Command");
                     }
                 } else {
-                    Main.getDiscord().getBot().getTextChannelById(Main.DcErrorChannel).sendMessageEmbeds(Main.getDiscord().getErrorEmbed("COLUMN", "Command")).queue();
+                    Main.getDiscord().sendErrorMessage("Failed to find COLUMN in Command");
                 }
             } else {
-                Main.getDiscord().getBot().getTextChannelById(Main.DcErrorChannel).sendMessageEmbeds(Main.getDiscord().getErrorEmbed("Table", "Command")).queue();
+                Main.getDiscord().sendErrorMessage("Failed to find Table in Command");
             }
         } else {
-            Main.getDiscord().getBot().getTextChannelById(Main.DcErrorChannel).sendMessageEmbeds(Main.getDiscord().getErrorEmbed("Database", "Commands")).queue();
+            Main.getDiscord().sendErrorMessage("Failed to find Database on Commands");
         }
     }
 }
