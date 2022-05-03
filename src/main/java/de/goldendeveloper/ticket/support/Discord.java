@@ -5,10 +5,8 @@ import club.minnced.discord.webhook.send.WebhookEmbed;
 import club.minnced.discord.webhook.send.WebhookEmbedBuilder;
 import de.goldendeveloper.ticket.support.listener.Commands;
 import de.goldendeveloper.ticket.support.listener.OnJoin;
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
-import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
 import net.dv8tion.jda.api.requests.GatewayIntent;
@@ -16,10 +14,16 @@ import net.dv8tion.jda.api.utils.ChunkingFilter;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 
-import java.awt.*;
-
 public class Discord {
 
+    public static final String cmdSupport = "support";
+    public static final String cmdSupportOption = "frage";
+    public static final String cmdSettings = "settings";
+    public static final String cmdSettingsSubSupport = "support";
+    public static final String cmdSettingsSubSupportOptionChannel = "channel";
+    public static final String cmdSettingsSubModerator = "moderator";
+    public static final String cmdSettingsSubModeratorOptionRole = "role";
+    public static final String cmdHelp = "help";
     private JDA bot;
 
     public Discord(String token) {
@@ -42,12 +46,12 @@ public class Discord {
                     )
                     .setAutoReconnect(true)
                     .build().awaitReady();
-            bot.upsertCommand(Main.cmdSettings, "Stellt den Discord Ticket-Support Bot ein!").addSubcommands(
-                            new SubcommandData(Main.cmdSettingsSubSupport, "Setze den Support Channel für das Ticket System").addOption(OptionType.CHANNEL, Main.cmdSettingsSubSupportOptionChannel, "Der Support Channel für das Ticket System", true),
-                            new SubcommandData(Main.cmdSettingsSubModerator, "Setzt die Moderator Role für das Ticket System").addOption(OptionType.ROLE, Main.cmdSettingsSubModeratorOptionRole, "Die Moderatoren Rolle für das Ticket System", true)
+            bot.upsertCommand(cmdSettings, "Stellt den Discord Ticket-Support Bot ein!").addSubcommands(
+                            new SubcommandData(cmdSettingsSubSupport, "Setze den Support Channel für das Ticket System").addOption(OptionType.CHANNEL, cmdSettingsSubSupportOptionChannel, "Der Support Channel für das Ticket System", true),
+                            new SubcommandData(cmdSettingsSubModerator, "Setzt die Moderator Role für das Ticket System").addOption(OptionType.ROLE, cmdSettingsSubModeratorOptionRole, "Die Moderatoren Rolle für das Ticket System", true)
                     ).queue();
-            bot.upsertCommand(Main.cmdSupport, "Erstellt ein Support Ticket für dich!").addOption(OptionType.STRING, Main.cmdSupportOption, "Stell deine Frage", true).queue();
-            bot.upsertCommand(Main.cmdHelp, "Zeigt dir eine Liste aller möglichen Befehle an!").queue();
+            bot.upsertCommand(cmdSupport, "Erstellt ein Support Ticket für dich!").addOption(OptionType.STRING, cmdSupportOption, "Stell deine Frage", true).queue();
+            bot.upsertCommand(cmdHelp, "Zeigt dir eine Liste aller möglichen Befehle an!").queue();
             Online();
         } catch (Exception e) {
             e.printStackTrace();

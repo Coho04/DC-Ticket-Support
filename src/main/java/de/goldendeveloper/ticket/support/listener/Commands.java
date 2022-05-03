@@ -1,8 +1,9 @@
 package de.goldendeveloper.ticket.support.listener;
 
-import de.goldendeveloper.mysql.entities.Column;
 import de.goldendeveloper.mysql.entities.Database;
 import de.goldendeveloper.mysql.entities.Table;
+import de.goldendeveloper.ticket.support.CreateMysql;
+import de.goldendeveloper.ticket.support.Discord;
 import de.goldendeveloper.ticket.support.Main;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
@@ -23,11 +24,11 @@ public class Commands extends ListenerAdapter {
     public void onSlashCommandInteraction(SlashCommandInteractionEvent e) {
         if (e.isFromGuild()) {
             String cmd = e.getName();
-            if (cmd.equalsIgnoreCase(Main.cmdSupport)) {
+            if (cmd.equalsIgnoreCase(Discord.cmdSupport)) {
                 e.getInteraction().reply(createSupportTicket(e, e.getUser())).queue();
-            } else if (cmd.equalsIgnoreCase(Main.cmdHelp)) {
+            } else if (cmd.equalsIgnoreCase(Discord.cmdHelp)) {
                 e.getInteraction().replyEmbeds(createHelpMessage()).queue();
-            } else if (cmd.equalsIgnoreCase(Main.cmdSettings)) {
+            } else if (cmd.equalsIgnoreCase(Discord.cmdSettings)) {
                 cmdSettings(e);
             }
         } else {
@@ -56,15 +57,15 @@ public class Commands extends ListenerAdapter {
     }
 
     private static String createSupportTicket(SlashCommandInteractionEvent e, User user) {
-        if (Main.getMysql().existsDatabase(Main.dbName)) {
-            Database db = Main.getMysql().getDatabase(Main.dbName);
-            if (db.existsTable(Main.tableName)) {
-                Table table = db.getTable(Main.tableName);
-                if (table.hasColumn(Main.cmnModeratorID)) {
-                    if (table.hasColumn(Main.cmnGuildID)) {
-                        if (table.getColumn(Main.cmnGuildID).getAll().contains(e.getGuild().getId())) {
-                            HashMap<String, Object> row = table.getRow(table.getColumn(Main.cmnGuildID), e.getGuild().getId());
-                            String roleID = row.get(Main.cmnModeratorID).toString();
+        if (Main.getCreateMysql().getMysql().existsDatabase(CreateMysql.dbName)) {
+            Database db = Main.getCreateMysql().getMysql().getDatabase(CreateMysql.dbName);
+            if (db.existsTable(CreateMysql.tableName)) {
+                Table table = db.getTable(CreateMysql.tableName);
+                if (table.hasColumn(CreateMysql.cmnModeratorID)) {
+                    if (table.hasColumn(CreateMysql.cmnGuildID)) {
+                        if (table.getColumn(CreateMysql.cmnGuildID).getAll().contains(e.getGuild().getId())) {
+                            HashMap<String, Object> row = table.getRow(table.getColumn(CreateMysql.cmnGuildID), e.getGuild().getId()).get();
+                            String roleID = row.get(CreateMysql.cmnModeratorID).toString();
                             Role role = e.getJDA().getRoleById(roleID);
                             Emote emote = e.getJDA().getEmoteById("957226297556336670");
                             if (role != null && emote != null) {
@@ -74,12 +75,12 @@ public class Commands extends ListenerAdapter {
                                 embed.setFooter("Golden-Developer", e.getJDA().getSelfUser().getAvatarUrl());
                                 embed.setThumbnail(e.getUser().getAvatarUrl());
                                 embed.setTimestamp(LocalDateTime.now());
-                                embed.addField("Ticket Support | " + user.getName(), "Offene Frage: " + e.getOption(Main.cmdSupportOption).getAsString(), true);
+                                embed.addField("Ticket Support | " + user.getName(), "Offene Frage: " + e.getOption(Discord.cmdSupportOption).getAsString(), true);
                                 embed.addField("", emote.getAsMention() + " Zum löschen des Tickets", false);
                                 embed.addField("", ":closed_lock_with_key:  Zum Archivieren des Tickets", false);
                                 embed.addField("", role.getAsMention(), true);
 
-                                TextChannel SupportChannel = e.getJDA().getTextChannelById(row.get(Main.cmnSupportChannelID).toString());
+                                TextChannel SupportChannel = e.getJDA().getTextChannelById(row.get(CreateMysql.cmnSupportChannelID).toString());
                                 if (SupportChannel != null) {
                                     SupportChannel.sendMessageEmbeds(embed.build()).queue();
                                     if (e.getGuild().getThreadChannelsByName("Ticket Support | " + user.getName(), true).isEmpty()) {
@@ -116,28 +117,25 @@ public class Commands extends ListenerAdapter {
     }
 
     private static void cmdSettings(SlashCommandInteractionEvent e) {
-        if (Main.getMysql().existsDatabase(Main.dbName)) {
-            if (Main.getMysql().getDatabase(Main.dbName).existsTable(Main.tableName)) {
-                Table table = Main.getMysql().getDatabase(Main.dbName).getTable(Main.tableName);
-                if (table.hasColumn(Main.cmnGuildID)) {
-                    if (table.getColumn(Main.cmnGuildID).getAll().contains(e.getGuild().getId())) {
-                        HashMap<String, Object> map = table.getRow(table.getColumn(Main.cmnGuildID), e.getGuild().getId());
-                        int id = Integer.parseInt(map.get("id").toString());
+        if (Main.getCreateMysql().getMysql().existsDatabase(CreateMysql.dbName)) {
+            if (Main.getCreateMysql().getMysql().getDatabase(CreateMysql.dbName).existsTable(CreateMysql.tableName)) {
+                Table table = Main.getCreateMysql().getMysql().getDatabase(CreateMysql.dbName).getTable(CreateMysql.tableName);
+                if (table.hasColumn(CreateMysql.cmnGuildID)) {
+                    if (table.getColumn(CreateMysql.cmnGuildID).getAll().contains(e.getGuild().getId())) {
+                        HashMap<String, Object> map = table.getRow(table.getColumn(CreateMysql.cmnGuildID), e.getGuild().getId()).get();
                         String subName = e.getSubcommandName();
                         if (subName != null) {
                             switch (subName) {
                                 case "support" -> {
-                                    TextChannel valueChannel = e.getOption(Main.cmdSettingsSubSupportOptionChannel).getAsTextChannel();
+                                    TextChannel valueChannel = e.getOption(Discord.cmdSettingsSubSupportOptionChannel).getAsTextChannel();
                                     if (valueChannel != null) {
-                                        Column clm = table.getColumn(Main.cmnSupportChannelID);
-                                        clm.set(valueChannel.getId(), id);
+                                        table.getRow(table.getColumn(CreateMysql.cmnGuildID), e.getGuild().getId()).set(table.getColumn(CreateMysql.cmnSupportChannelID), valueChannel.getId());
                                         e.getInteraction().reply("Der Support Channel wurde erfolgreich auf " + valueChannel.getAsMention() + " gesetzt!").queue();
                                     }
                                 }
                                 case "moderator" -> {
-                                    Role valueRole = e.getOption(Main.cmdSettingsSubModeratorOptionRole).getAsRole();
-                                    Column clm = table.getColumn(Main.cmnModeratorID);
-                                    clm.set(valueRole.getId(), id);
+                                    Role valueRole = e.getOption(Discord.cmdSettingsSubModeratorOptionRole).getAsRole();
+                                    table.getRow(table.getColumn(CreateMysql.cmnGuildID), e.getGuild().getId()).set(table.getColumn(CreateMysql.cmnModeratorID), valueRole.getId());
                                     e.getInteraction().reply("Der Moderator Role wurde erfolgreich auf " + valueRole.getAsMention() + " gesetzt!").queue();
                                 }
                             }

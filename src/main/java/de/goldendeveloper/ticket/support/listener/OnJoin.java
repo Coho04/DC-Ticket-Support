@@ -1,8 +1,9 @@
 package de.goldendeveloper.ticket.support.listener;
 
 import de.goldendeveloper.mysql.entities.Database;
-import de.goldendeveloper.mysql.entities.Row;
+import de.goldendeveloper.mysql.entities.RowBuilder;
 import de.goldendeveloper.mysql.entities.Table;
+import de.goldendeveloper.ticket.support.CreateMysql;
 import de.goldendeveloper.ticket.support.Main;
 import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -13,13 +14,19 @@ public class OnJoin extends ListenerAdapter {
 
     @Override
     public void onGuildJoin(GuildJoinEvent e) {
-        if (Main.getMysql().existsDatabase(Main.dbName)) {
-            Database db = Main.getMysql().getDatabase(Main.dbName);
-            if (db.existsTable(Main.tableName)) {
-                Table table = db.getTable(Main.tableName);
-                List<Object> guilds = table.getColumn(Main.cmnGuildID).getAll();
+        if (Main.getCreateMysql().getMysql().existsDatabase(CreateMysql.dbName)) {
+            Database db = Main.getCreateMysql().getMysql().getDatabase(CreateMysql.dbName);
+            if (db.existsTable(CreateMysql.tableName)) {
+                Table table = db.getTable(CreateMysql.tableName);
+                List<Object> guilds = table.getColumn(CreateMysql.cmnGuildID).getAll();
                 if (!guilds.contains(e.getGuild().getId())) {
-                    table.insert(new Row(table, table.getDatabase()).with(Main.cmnGuildID, e.getGuild().getId()).with(Main.cmnModeratorID, "null").with(Main.cmnOwnerID, e.getGuild().getOwnerId()).with(Main.cmnSupportChannelID, "null"));
+                    table.insert(new RowBuilder()
+                            .with(table.getColumn(CreateMysql.cmnGuildID), e.getGuild().getId())
+                            .with(table.getColumn(CreateMysql.cmnModeratorID), "null")
+                            .with(table.getColumn(CreateMysql.cmnOwnerID), e.getGuild().getOwnerId())
+                            .with(table.getColumn(CreateMysql.cmnSupportChannelID), "null")
+                            .build()
+                    );
                 }
             } else {
                 Main.getDiscord().sendErrorMessage("Failed to find Table in onJoin");
