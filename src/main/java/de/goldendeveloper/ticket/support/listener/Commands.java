@@ -1,6 +1,7 @@
 package de.goldendeveloper.ticket.support.listener;
 
 import de.goldendeveloper.mysql.entities.Database;
+import de.goldendeveloper.mysql.entities.SearchResult;
 import de.goldendeveloper.mysql.entities.Table;
 import de.goldendeveloper.ticket.support.CreateMysql;
 import de.goldendeveloper.ticket.support.Discord;
@@ -64,8 +65,8 @@ public class Commands extends ListenerAdapter {
                 if (table.hasColumn(CreateMysql.cmnModeratorID)) {
                     if (table.hasColumn(CreateMysql.cmnGuildID)) {
                         if (table.getColumn(CreateMysql.cmnGuildID).getAll().contains(e.getGuild().getId())) {
-                            HashMap<String, Object> row = table.getRow(table.getColumn(CreateMysql.cmnGuildID), e.getGuild().getId()).get();
-                            String roleID = row.get(CreateMysql.cmnModeratorID).toString();
+                            HashMap<String, SearchResult> row = table.getRow(table.getColumn(CreateMysql.cmnGuildID), e.getGuild().getId()).get();
+                            String roleID = row.get(CreateMysql.cmnModeratorID).getAsString();
                             Role role = e.getJDA().getRoleById(roleID);
                             Emote emote = e.getJDA().getEmoteById("957226297556336670");
                             if (role != null && emote != null) {
@@ -80,7 +81,7 @@ public class Commands extends ListenerAdapter {
                                 embed.addField("", ":closed_lock_with_key:  Zum Archivieren des Tickets", false);
                                 embed.addField("", role.getAsMention(), true);
 
-                                TextChannel SupportChannel = e.getJDA().getTextChannelById(row.get(CreateMysql.cmnSupportChannelID).toString());
+                                TextChannel SupportChannel = e.getJDA().getTextChannelById(row.get(CreateMysql.cmnSupportChannelID).getAsLong());
                                 if (SupportChannel != null) {
                                     SupportChannel.sendMessageEmbeds(embed.build()).queue();
                                     if (e.getGuild().getThreadChannelsByName("Ticket Support | " + user.getName(), true).isEmpty()) {
@@ -122,7 +123,6 @@ public class Commands extends ListenerAdapter {
                 Table table = Main.getCreateMysql().getMysql().getDatabase(CreateMysql.dbName).getTable(CreateMysql.tableName);
                 if (table.hasColumn(CreateMysql.cmnGuildID)) {
                     if (table.getColumn(CreateMysql.cmnGuildID).getAll().contains(e.getGuild().getId())) {
-                        HashMap<String, Object> map = table.getRow(table.getColumn(CreateMysql.cmnGuildID), e.getGuild().getId()).get();
                         String subName = e.getSubcommandName();
                         if (subName != null) {
                             switch (subName) {
