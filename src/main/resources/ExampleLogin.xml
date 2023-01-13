@@ -5,6 +5,10 @@
         <Password>PASSWORD</Password>
         <Port>PORT</Port>
     </MYSQL>
+    <Server>
+        <Hostname>HOSTNAME</Hostname>
+        <Port>PORT</Port>
+    </Server>
     <Discord>
         <Token>TOKEN</Token>
         <Webhook>WEBHOOK</Webhook>

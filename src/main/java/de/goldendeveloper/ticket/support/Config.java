@@ -89,6 +89,20 @@ public class Config {
                     }
                 }
             }
+            list = doc.getElementsByTagName("Server");
+            for (int i = 0; i < list.getLength(); i++) {
+                if (list.item(i).getNodeType() == Node.ELEMENT_NODE) {
+                    Element element = (Element) list.item(i);
+                    String hostname = element.getElementsByTagName("Hostname").item(0).getTextContent();
+                    String port = doc.getElementsByTagName("Port").item(1).getTextContent();
+                    if (!hostname.isEmpty() || !hostname.isBlank()) {
+                        this.ServerHostname = hostname;
+                    }
+                    if (!port.isEmpty() || !port.isBlank()) {
+                        this.ServerPort = Integer.parseInt(port);
+                    }
+                }
+            }
         } catch (ParserConfigurationException | SAXException | IOException e) {
             e.printStackTrace();
         }

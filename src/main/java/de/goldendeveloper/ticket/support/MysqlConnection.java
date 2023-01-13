@@ -7,7 +7,7 @@ import de.goldendeveloper.mysql.entities.Table;
 public class MysqlConnection {
 
     private final MYSQL mysql;
-    public static final String dbName = "TicketSupport";
+    public static final String dbName = "GD-Ticket-Support";
     public static final String tableName = "Support";
     public static final String cmnSupportChannelID = "SupportChannelID";
     public static final String cmnModeratorID = "ModeratorID";
