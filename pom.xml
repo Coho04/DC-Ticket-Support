@@ -114,7 +114,7 @@
         <dependency>
             <groupId>net.dv8tion</groupId>
             <artifactId>JDA</artifactId>
-            <version>5.0.0-alpha.10</version>
+            <version>5.0.0-beta.2</version>
         </dependency>
         <dependency>
             <groupId>club.minnced</groupId>
@@ -124,7 +124,7 @@
         <dependency>
             <groupId>com.github.golden-developer</groupId>
             <artifactId>mysql-api</artifactId>
-            <version>3.0</version>
+            <version>4.5</version>
         </dependency>
     </dependencies>
 </project>
