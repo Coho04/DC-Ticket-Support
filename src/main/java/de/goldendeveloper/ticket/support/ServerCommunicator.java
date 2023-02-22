@@ -24,7 +24,7 @@ public class ServerCommunicator {
         this.PORT = PORT;
     }
 
-    public void sendToServer(Enum action, String serverId) {
+    public void sendToServer(Enum<action> action, String serverId) {
         Socket socket = null;
         try {
             socket = new Socket(this.HOSTNAME, this.PORT);
