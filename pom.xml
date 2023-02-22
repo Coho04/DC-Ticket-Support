@@ -119,7 +119,7 @@
         <dependency>
             <groupId>com.github.golden-developer</groupId>
             <artifactId>mysql-api</artifactId>
-            <version>5.0</version>
+            <version>5.1</version>
         </dependency>
         <dependency>
             <groupId>org.json</groupId>
