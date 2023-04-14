@@ -99,17 +99,17 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>1.7.36</version>
+            <version>2.0.5</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
-            <version>1.7.36</version>
+            <version>2.0.5</version>
         </dependency>
         <dependency>
             <groupId>net.dv8tion</groupId>
             <artifactId>JDA</artifactId>
-            <version>5.0.0-beta.4</version>
+            <version>5.0.0-beta.8</version>
         </dependency>
         <dependency>
             <groupId>club.minnced</groupId>
@@ -119,12 +119,12 @@
         <dependency>
             <groupId>com.github.golden-developer</groupId>
             <artifactId>mysql-api</artifactId>
-            <version>5.2</version>
+            <version>5.3</version>
         </dependency>
         <dependency>
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
-            <version>20220924</version>
+            <version>20230227</version>
         </dependency>
     </dependencies>
 </project>
