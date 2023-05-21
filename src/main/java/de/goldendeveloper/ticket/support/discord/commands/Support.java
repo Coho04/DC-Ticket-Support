@@ -1,0 +1,85 @@
+package de.goldendeveloper.ticket.support.discord.commands;
+
+import de.goldendeveloper.dcbcore.DCBot;
+import de.goldendeveloper.dcbcore.interfaces.CommandInterface;
+import de.goldendeveloper.mysql.entities.Database;
+import de.goldendeveloper.mysql.entities.SearchResult;
+import de.goldendeveloper.mysql.entities.Table;
+import de.goldendeveloper.ticket.support.Main;
+import de.goldendeveloper.ticket.support.MysqlConnection;
+import de.goldendeveloper.ticket.support.discord.Events;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
+import net.dv8tion.jda.api.entities.channel.concrete.ThreadChannel;
+import net.dv8tion.jda.api.entities.emoji.Emoji;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.build.CommandData;
+import net.dv8tion.jda.api.interactions.commands.build.Commands;
+
+import java.awt.*;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.List;
+
+public class Support implements CommandInterface {
+
+    public static final String cmdSupport = "support";
+    public static final String cmdSupportOption = "frage";
+
+    @Override
+    public CommandData commandData() {
+        return Commands.slash(cmdSupport, "Erstelle ein Support Ticket!")
+                .setGuildOnly(true)
+                .addOption(OptionType.STRING, cmdSupportOption, "Stell deine Frage", true);
+    }
+
+    @Override
+    public void runSlashCommand(SlashCommandInteractionEvent e, DCBot dcBot) {
+        if (Main.getMysqlConnection().getMysql().existsDatabase(MysqlConnection.dbName)) {
+            Database db = Main.getMysqlConnection().getMysql().getDatabase(MysqlConnection.dbName);
+            if (db.existsTable(MysqlConnection.tableName)) {
+                Table table = db.getTable(MysqlConnection.tableName);
+                if (table.hasColumn(MysqlConnection.cmnModeratorID) && table.hasColumn(MysqlConnection.cmnGuildID) && table.getColumn(MysqlConnection.cmnGuildID).getAll().getAsString().contains(e.getGuild().getId())) {
+                    HashMap<String, SearchResult> row = table.getRow(table.getColumn(MysqlConnection.cmnGuildID), e.getGuild().getId()).getData();
+                    Role role = e.getJDA().getRoleById(row.get(MysqlConnection.cmnModeratorID).getAsString());
+                    Emoji emote = e.getJDA().getEmojiById("957226297556336670");
+                    if (role != null && emote != null) {
+                        EmbedBuilder embed = new EmbedBuilder();
+                        embed.setTitle("**Support**");
+                        embed.setColor(Color.GREEN);
+                        embed.setFooter("Golden-Developer", e.getJDA().getSelfUser().getAvatarUrl());
+                        embed.setThumbnail(e.getUser().getAvatarUrl());
+                        embed.setTimestamp(LocalDateTime.now());
+                        embed.addField("Ticket Support | " + e.getUser().getName(), "Offene Frage: " + e.getOption(cmdSupportOption).getAsString(), true);
+                        embed.addField("", emote.getAsReactionCode() + " Zum löschen des Tickets", false);
+                        embed.addField("", ":closed_lock_with_key:  Zum Archivieren des Tickets", false);
+                        embed.addField("", role.getAsMention(), true);
+                        TextChannel supportChannel = e.getJDA().getTextChannelById(row.get(MysqlConnection.cmnSupportChannelID).getAsLong());
+                        if (supportChannel != null) {
+                            supportChannel.sendMessageEmbeds(embed.build()).queue();
+                            List<ThreadChannel> channels = e.getGuild().getThreadChannelsByName("Ticket Support | " + e.getUser().getName(), true);
+                            if (channels.isEmpty()) {
+                                supportChannel.createThreadChannel("Ticket Support | " + e.getUser().getName()).queue(channel -> {
+                                    channel.addThreadMember(e.getUser()).queue();
+                                    channel.getManager().setLocked(true).queue();
+                                    channel.sendMessageEmbeds(embed.build()).queue(message -> {
+                                        message.addReaction(Emoji.fromUnicode(Events.closeTicketEmoji)).queue();
+                                        message.addReaction(emote).queue();
+                                    });
+                                });
+                            } else {
+                                ThreadChannel channelSupport = channels.get(0);
+                                if (channelSupport != null) {
+                                    channelSupport.getManager().setArchived(false).queue();
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        e.getInteraction().reply("Dein Support Ticket wurde erstellt!").queue();
+    }
+}
