@@ -5,9 +5,8 @@ name: Deploy Java
 
 on:
   push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+    branches:
+      - main
 
 jobs:
   build:
@@ -61,13 +60,14 @@ jobs:
             **/generated-sources/**
             **/maven-archiver/**
             **/maven-status/**
+
       - name: ls -a via ssh
         uses: fifsky/ssh-action@master
         with:
           command: |
             cd '${{ secrets.SERVER_DIR }}'
             ./start.sh
-          port: 222
           host: ${{ secrets.HOST }}
+          port: 222
           user: ${{ secrets.USERNAME }}
           pass : ${{ secrets.PASSWORD }}
