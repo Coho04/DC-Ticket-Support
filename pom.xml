@@ -7,8 +7,14 @@
     <groupId>de.goldendeveloper</groupId>
     <artifactId>GD-Ticket-Support</artifactId>
     <version>1.0</version>
-
     <name>GD-Ticket-Support</name>
+
+    <properties>
+        <java.version>20</java.version>
+        <project.source.encoding>UTF-8</project.source.encoding>
+        <project.target.encoding>UTF-8</project.target.encoding>
+    </properties>
+
     <build>
         <resources>
             <resource>
@@ -24,8 +30,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.11.0</version>
                 <configuration>
-                    <source>14</source>
-                    <target>14</target>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
                 </configuration>
             </plugin>
 
@@ -81,13 +87,6 @@
         </plugins>
     </build>
 
-    <properties>
-        <project.source.encoding>UTF-8</project.source.encoding>
-        <project.target.encoding>UTF-8</project.target.encoding>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
-    </properties>
-
     <repositories>
         <repository>
             <id>jitpack.io</id>
@@ -100,11 +99,6 @@
     </repositories>
 
     <dependencies>
-        <dependency>
-            <groupId>com.github.golden-developer</groupId>
-            <artifactId>mysql-api</artifactId>
-            <version>5.3</version>
-        </dependency>
         <dependency>
             <groupId>de.goldendeveloper</groupId>
             <artifactId>DCB-Core</artifactId>
