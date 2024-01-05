@@ -3,6 +3,9 @@ package de.goldendeveloper.ticket.support;
 import de.goldendeveloper.mysql.MYSQL;
 import de.goldendeveloper.mysql.entities.Database;
 import de.goldendeveloper.mysql.entities.Table;
+import de.goldendeveloper.mysql.exceptions.NoConnectionException;
+
+import java.sql.SQLException;
 
 public class MysqlConnection {
 
@@ -14,7 +17,7 @@ public class MysqlConnection {
     public static final String cmnGuildID = "GuildID";
     public static final String cmnOwnerID = "OwnerID";
 
-    public MysqlConnection(String hostname, String username, String password, int port) {
+    public MysqlConnection(String hostname, String username, String password, int port) throws NoConnectionException, SQLException {
         mysql = new MYSQL(hostname, username, password, port);
         if (!mysql.existsDatabase(dbName)) {
             mysql.createDatabase(dbName);
