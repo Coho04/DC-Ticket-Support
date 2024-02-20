@@ -7,6 +7,7 @@ import de.goldendeveloper.ticket.support.MysqlConnection;
 import de.goldendeveloper.ticket.support.Main;
 import io.sentry.Sentry;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
+import net.dv8tion.jda.api.entities.emoji.EmojiUnion;
 import net.dv8tion.jda.api.entities.emoji.RichCustomEmoji;
 import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
@@ -34,11 +35,15 @@ public class Events extends ListenerAdapter {
                             .with(table.getColumn(MysqlConnection.cmnSupportChannelID), "null")
                             .build()
                     );
+                } else {
+                    System.out.println("Guild Id already exists in Table");
                 }
             } else {
+                System.out.println("Failed to find Table in onJoin");
                 Sentry.captureMessage("Failed to find Table in onJoin");
             }
         } else {
+            System.out.println("Failed to find Database in onJoin");
             Sentry.captureMessage("Failed to find Database in onJoin");
         }
     }
@@ -46,8 +51,7 @@ public class Events extends ListenerAdapter {
     @Override
     public void onMessageReactionAdd(MessageReactionAddEvent e) {
         if (e.isFromGuild() && e.isFromThread() && !e.getUser().isBot()) {
-            RichCustomEmoji emote = e.getJDA().getEmojiById("957226297556336670");
-            if (e.getReaction().getEmoji().asCustom().getImageUrl().equals(emote.getImageUrl())) {
+            if (e.getReaction().getEmoji().equals(e.getJDA().getEmojiById("957226297556336670"))) {
                 e.getChannel().asThreadChannel().delete().queue();
             }
             if (e.getEmoji().equals(Emoji.fromUnicode(closeTicketEmoji))) {
