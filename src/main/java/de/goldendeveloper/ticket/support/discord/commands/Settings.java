@@ -2,9 +2,9 @@ package de.goldendeveloper.ticket.support.discord.commands;
 
 import de.goldendeveloper.dcbcore.DCBot;
 import de.goldendeveloper.dcbcore.interfaces.CommandInterface;
-import de.goldendeveloper.mysql.entities.Table;
 import de.goldendeveloper.ticket.support.Main;
 import de.goldendeveloper.ticket.support.MysqlConnection;
+import io.github.coho04.mysql.entities.Table;
 import io.sentry.Sentry;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;

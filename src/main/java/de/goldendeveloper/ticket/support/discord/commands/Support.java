@@ -2,12 +2,12 @@ package de.goldendeveloper.ticket.support.discord.commands;
 
 import de.goldendeveloper.dcbcore.DCBot;
 import de.goldendeveloper.dcbcore.interfaces.CommandInterface;
-import de.goldendeveloper.mysql.entities.Database;
-import de.goldendeveloper.mysql.entities.SearchResult;
-import de.goldendeveloper.mysql.entities.Table;
 import de.goldendeveloper.ticket.support.Main;
 import de.goldendeveloper.ticket.support.MysqlConnection;
 import de.goldendeveloper.ticket.support.discord.Events;
+import io.github.coho04.mysql.entities.Database;
+import io.github.coho04.mysql.entities.SearchResult;
+import io.github.coho04.mysql.entities.Table;
 import io.sentry.Sentry;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Role;

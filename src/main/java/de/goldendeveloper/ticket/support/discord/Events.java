@@ -1,14 +1,12 @@
 package de.goldendeveloper.ticket.support.discord;
 
-import de.goldendeveloper.mysql.entities.Database;
-import de.goldendeveloper.mysql.entities.RowBuilder;
-import de.goldendeveloper.mysql.entities.Table;
 import de.goldendeveloper.ticket.support.MysqlConnection;
 import de.goldendeveloper.ticket.support.Main;
+import io.github.coho04.mysql.entities.Database;
+import io.github.coho04.mysql.entities.RowBuilder;
+import io.github.coho04.mysql.entities.Table;
 import io.sentry.Sentry;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
-import net.dv8tion.jda.api.entities.emoji.EmojiUnion;
-import net.dv8tion.jda.api.entities.emoji.RichCustomEmoji;
 import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
