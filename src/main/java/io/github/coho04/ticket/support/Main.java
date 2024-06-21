@@ -1,9 +1,9 @@
-package de.goldendeveloper.ticket.support;
+package io.github.coho04.ticket.support;
 
-import de.goldendeveloper.dcbcore.DCBotBuilder;
-import de.goldendeveloper.ticket.support.discord.Events;
-import de.goldendeveloper.ticket.support.discord.commands.Settings;
-import de.goldendeveloper.ticket.support.discord.commands.Support;
+import io.github.coho04.ticket.support.discord.Events;
+import io.github.coho04.ticket.support.discord.commands.Settings;
+import io.github.coho04.ticket.support.discord.commands.Support;
+import io.github.coho04.dcbcore.DCBotBuilder;
 
 public class Main {
 

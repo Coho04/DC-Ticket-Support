@@ -1,4 +1,4 @@
-package de.goldendeveloper.ticket.support;
+package io.github.coho04.ticket.support;
 
 import io.github.coho04.mysql.MYSQL;
 import io.github.coho04.mysql.entities.Database;

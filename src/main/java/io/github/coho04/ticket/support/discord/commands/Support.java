@@ -1,10 +1,10 @@
-package de.goldendeveloper.ticket.support.discord.commands;
+package io.github.coho04.ticket.support.discord.commands;
 
-import de.goldendeveloper.dcbcore.DCBot;
-import de.goldendeveloper.dcbcore.interfaces.CommandInterface;
-import de.goldendeveloper.ticket.support.Main;
-import de.goldendeveloper.ticket.support.MysqlConnection;
-import de.goldendeveloper.ticket.support.discord.Events;
+import io.github.coho04.ticket.support.Main;
+import io.github.coho04.ticket.support.MysqlConnection;
+import io.github.coho04.ticket.support.discord.Events;
+import io.github.coho04.dcbcore.DCBot;
+import io.github.coho04.dcbcore.interfaces.CommandInterface;
 import io.github.coho04.mysql.entities.Database;
 import io.github.coho04.mysql.entities.SearchResult;
 import io.github.coho04.mysql.entities.Table;
@@ -91,7 +91,7 @@ public class Support implements CommandInterface {
         return new EmbedBuilder()
                 .setTitle("**Support**")
                 .setColor(Color.GREEN)
-                .setFooter("Golden-Developer", e.getJDA().getSelfUser().getAvatarUrl())
+                .setFooter("TicketSupport", e.getJDA().getSelfUser().getAvatarUrl())
                 .setThumbnail(e.getUser().getAvatarUrl())
                 .setTimestamp(LocalDateTime.now())
                 .addField("Ticket Support | " + e.getUser().getName(), "Offene Frage: " + e.getOption(cmdSupportOption).getAsString(), true)

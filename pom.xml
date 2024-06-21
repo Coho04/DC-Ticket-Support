@@ -4,10 +4,10 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>de.goldendeveloper</groupId>
-    <artifactId>GD-Ticket-Support</artifactId>
+    <groupId>io.github.coho04</groupId>
+    <artifactId>DC-Ticket-Support</artifactId>
     <version>1.0</version>
-    <name>GD-Ticket-Support</name>
+    <name>DC-Ticket-Support</name>
 
     <properties>
         <java.version>20</java.version>
@@ -68,11 +68,11 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>3.4.1</version>
+                <version>3.4.2</version>
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>de.goldendeveloper.ticket.support.Main</mainClass>
+                            <mainClass>io.github.coho04.ticket.support.Main</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -87,18 +87,11 @@
         </plugins>
     </build>
 
-    <repositories>
-        <repository>
-            <id>Golden-Developer-Maven-Public</id>
-            <url>https://nexus.golden-developer.de/repository/maven-public/</url>
-        </repository>
-    </repositories>
-
     <dependencies>
         <dependency>
-            <groupId>de.goldendeveloper</groupId>
+            <groupId>io.github.coho04</groupId>
             <artifactId>DCB-Core</artifactId>
-            <version>1.9.3</version>
+            <version>1.9.4</version>
         </dependency>
         <dependency>
             <groupId>io.github.coho04</groupId>
