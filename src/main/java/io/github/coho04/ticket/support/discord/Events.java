@@ -1,7 +1,7 @@
-package de.goldendeveloper.ticket.support.discord;
+package io.github.coho04.ticket.support.discord;
 
-import de.goldendeveloper.ticket.support.MysqlConnection;
-import de.goldendeveloper.ticket.support.Main;
+import io.github.coho04.ticket.support.Main;
+import io.github.coho04.ticket.support.MysqlConnection;
 import io.github.coho04.mysql.entities.Database;
 import io.github.coho04.mysql.entities.RowBuilder;
 import io.github.coho04.mysql.entities.Table;

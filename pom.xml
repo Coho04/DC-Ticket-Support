@@ -4,10 +4,10 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>de.goldendeveloper</groupId>
-    <artifactId>GD-Ticket-Support</artifactId>
+    <groupId>io.github.coho04</groupId>
+    <artifactId>DC-Ticket-Support</artifactId>
     <version>1.0</version>
-    <name>GD-Ticket-Support</name>
+    <name>DC-Ticket-Support</name>
 
     <properties>
         <java.version>20</java.version>
@@ -72,7 +72,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>de.goldendeveloper.ticket.support.Main</mainClass>
+                            <mainClass>io.github.coho04.ticket.support.Main</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

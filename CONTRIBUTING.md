@@ -11,7 +11,7 @@ The following is a set of guidelines for contributing to DC-Ticket-Support on Gi
 2. **Clone the Repository.** Clone your forked repository to your local machine.
 
     ```bash
-    git clone git@github.com:Golden-Developer/DC-Ticket-Support.git
+    git clone git@github.com:Coho04/DC-Ticket-Support.git
     ```
 
 3. **Create a New Branch.** Create a new branch for the changes you want to make.
