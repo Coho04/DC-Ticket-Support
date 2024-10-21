@@ -39,10 +39,10 @@ public class Support implements CommandInterface {
 
     @Override
     public void runSlashCommand(SlashCommandInteractionEvent e, DCBot dcBot) {
-        if (!Main.getMysqlConnection().getMysql().existsDatabase(MysqlConnection.dbName)) {
-            throw createException("Database " + MysqlConnection.dbName + " does not exist");
+        if (!Main.getMysqlConnection().getMysql().existsDatabase(Main.getCustomConfig().getMysqlDatabase())) {
+            throw createException("Database " + Main.getCustomConfig().getMysqlDatabase() + " does not exist");
         }
-        Database db = Main.getMysqlConnection().getMysql().getDatabase(MysqlConnection.dbName);
+        Database db = Main.getMysqlConnection().getMysql().getDatabase(Main.getCustomConfig().getMysqlDatabase());
         if (!db.existsTable(MysqlConnection.tableName)) {
             throw createException("Table " + MysqlConnection.tableName + " does not exist");
         }

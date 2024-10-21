@@ -20,8 +20,8 @@ public class Events extends ListenerAdapter {
 
     @Override
     public void onGuildJoin(@NotNull GuildJoinEvent e) {
-        if (Main.getMysqlConnection().getMysql().existsDatabase(MysqlConnection.dbName)) {
-            Database db = Main.getMysqlConnection().getMysql().getDatabase(MysqlConnection.dbName);
+        if (Main.getMysqlConnection().getMysql().existsDatabase(Main.getCustomConfig().getMysqlDatabase())) {
+            Database db = Main.getMysqlConnection().getMysql().getDatabase(Main.getCustomConfig().getMysqlDatabase());
             if (db.existsTable(MysqlConnection.tableName)) {
                 Table table = db.getTable(MysqlConnection.tableName);
                 List<String> guilds = table.getColumn(MysqlConnection.cmnGuildID).getAll().getAsString();
